@@ -1280,3 +1280,21 @@ footer {
     }
 
 }
+
+/* FORCE PROFILE PHOTO TO RECTANGLE */
+.profile-image-container,
+.profile-image-ring,
+.profile-image {
+    border-radius: 20px !important;
+}
+
+.profile-image-ring {
+    width: 300px !important;
+    height: 340px !important;
+}
+
+.profile-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
