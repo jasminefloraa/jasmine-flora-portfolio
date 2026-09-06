@@ -388,6 +388,7 @@ nav a.active::after {
     align-items: center;
     justify-content: center;
 }
+
 .profile-image-container {
     width: 300px;
     height: 340px;
@@ -427,7 +428,6 @@ nav a.active::after {
 
     border: 8px solid var(--bg-secondary);
 }
-
 
 /* =========================
    GENERAL SECTIONS
