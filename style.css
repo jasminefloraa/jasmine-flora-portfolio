@@ -403,7 +403,7 @@ nav a.active::after {
 
     padding: 8px;
 
-    border-radius: 50%;
+    border-radius: 28px;
 
     background: linear-gradient(
         135deg,
@@ -423,7 +423,7 @@ nav a.active::after {
 
     object-fit: cover;
 
-    border-radius: 50%;
+    border-radius: 22px;
 
     border: 8px solid var(--bg-secondary);
 }
