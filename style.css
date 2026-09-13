@@ -429,6 +429,7 @@ nav a.active::after {
     border: 8px solid var(--bg-secondary);
 }
 
+
 /* =========================
    GENERAL SECTIONS
 ========================= */
@@ -1281,7 +1282,9 @@ footer {
 
 }
 
+
 /* FORCE PROFILE PHOTO TO RECTANGLE */
+
 .profile-image-container,
 .profile-image-ring,
 .profile-image {
