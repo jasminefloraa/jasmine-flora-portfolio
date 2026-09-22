@@ -1,203 +1,488 @@
 /* =========================================================
-   JASMINE FLORA PORTFOLIO - JAVASCRIPT
-========================================================= */
+   JASMINE FLORA PORTFOLIO
+   INTERACTIONS + THEME + PREMIUM SCROLL ANIMATIONS
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const body = document.body;
+    const navbar = document.getElementById("navbar");
+    const themeToggle = document.getElementById("themeToggle");
+    const menuToggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+
+    const navLinks = document.querySelectorAll(".nav-link");
+    const sections = document.querySelectorAll("main section[id]");
+    const revealElements = document.querySelectorAll(".reveal");
+
+    /* Tell CSS that JavaScript is available */
+    body.classList.add("js-ready");
 
 
-/* =========================================================
-   MOBILE MENU
-========================================================= */
+    /* =========================================================
+       THEME TOGGLE
+       ========================================================= */
 
-const menuToggle = document.getElementById("menuToggle");
-const navMenu = document.getElementById("navMenu");
+    if (themeToggle) {
 
-if (menuToggle && navMenu) {
-    menuToggle.addEventListener("click", () => {
-        navMenu.classList.toggle("active");
+        const themeIcon = themeToggle.querySelector("i");
 
-        const icon = menuToggle.querySelector("i");
+        function setTheme(theme) {
 
-        if (navMenu.classList.contains("active")) {
-            icon.classList.remove("fa-bars");
-            icon.classList.add("fa-xmark");
-            menuToggle.setAttribute("aria-label", "Close menu");
-        } else {
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
-            menuToggle.setAttribute("aria-label", "Open menu");
+            if (theme === "dark") {
+
+                body.classList.add("dark-theme");
+
+                if (themeIcon) {
+                    themeIcon.classList.remove("fa-moon");
+                    themeIcon.classList.add("fa-sun");
+                }
+
+                themeToggle.setAttribute(
+                    "aria-label",
+                    "Switch to light mode"
+                );
+
+                themeToggle.setAttribute(
+                    "title",
+                    "Switch to light mode"
+                );
+
+                localStorage.setItem("theme", "dark");
+
+            } else {
+
+                body.classList.remove("dark-theme");
+
+                if (themeIcon) {
+                    themeIcon.classList.remove("fa-sun");
+                    themeIcon.classList.add("fa-moon");
+                }
+
+                themeToggle.setAttribute(
+                    "aria-label",
+                    "Switch to dark mode"
+                );
+
+                themeToggle.setAttribute(
+                    "title",
+                    "Switch to dark mode"
+                );
+
+                localStorage.setItem("theme", "light");
+            }
         }
-    });
 
-    const navLinks = navMenu.querySelectorAll("a");
 
-    navLinks.forEach((link) => {
-        link.addEventListener("click", () => {
-            navMenu.classList.remove("active");
+        /* Load saved theme */
 
-            const icon = menuToggle.querySelector("i");
+        const savedTheme = localStorage.getItem("theme");
+
+        if (savedTheme === "dark") {
+            setTheme("dark");
+        } else {
+            setTheme("light");
+        }
+
+
+        /* Change theme when button is clicked */
+
+        themeToggle.addEventListener("click", () => {
+
+            const isDark =
+                body.classList.contains("dark-theme");
+
+            setTheme(isDark ? "light" : "dark");
+
+        });
+
+    }
+
+
+    /* =========================================================
+       MOBILE MENU
+       ========================================================= */
+
+    function closeMenu() {
+
+        if (!navMenu) return;
+
+        navMenu.classList.remove("open");
+
+        body.classList.remove("no-scroll");
+
+
+        if (menuToggle) {
+
+            menuToggle.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
+
+            const icon =
+                menuToggle.querySelector("i");
 
             if (icon) {
+
                 icon.classList.remove("fa-xmark");
+
                 icon.classList.add("fa-bars");
+
+            }
+        }
+    }
+
+
+    function openMenu() {
+
+        if (!navMenu) return;
+
+        navMenu.classList.add("open");
+
+        body.classList.add("no-scroll");
+
+
+        if (menuToggle) {
+
+            menuToggle.setAttribute(
+                "aria-label",
+                "Close navigation menu"
+            );
+
+            const icon =
+                menuToggle.querySelector("i");
+
+            if (icon) {
+
+                icon.classList.remove("fa-bars");
+
+                icon.classList.add("fa-xmark");
+
+            }
+        }
+    }
+
+
+    if (menuToggle && navMenu) {
+
+        menuToggle.addEventListener("click", () => {
+
+            const isOpen =
+                navMenu.classList.contains("open");
+
+            if (isOpen) {
+                closeMenu();
+            } else {
+                openMenu();
             }
 
-            menuToggle.setAttribute("aria-label", "Open menu");
         });
-    });
-}
 
-
-/* =========================================================
-   DARK / LIGHT MODE
-========================================================= */
-
-const themeToggle = document.getElementById("themeToggle");
-
-if (themeToggle) {
-    const savedTheme = localStorage.getItem("portfolio-theme");
-
-    if (savedTheme === "light") {
-        document.body.classList.add("light-mode");
-        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    } else {
-        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
     }
 
-    themeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("light-mode");
 
-        const isLight =
-            document.body.classList.contains("light-mode");
+    /* =========================================================
+       SMOOTH NAVIGATION
+       ========================================================= */
 
-        if (isLight) {
-            themeToggle.innerHTML =
-                '<i class="fas fa-sun"></i>';
+    navLinks.forEach(link => {
 
-            localStorage.setItem(
-                "portfolio-theme",
-                "light"
+        link.addEventListener("click", event => {
+
+            const targetId =
+                link.getAttribute("href");
+
+            if (
+                !targetId ||
+                !targetId.startsWith("#")
+            ) {
+                return;
+            }
+
+
+            const target =
+                document.querySelector(targetId);
+
+            if (!target) return;
+
+
+            event.preventDefault();
+
+            closeMenu();
+
+
+            target.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+
+            history.replaceState(
+                null,
+                "",
+                targetId
             );
+
+        });
+
+    });
+
+
+    /* =========================================================
+       NAVBAR SCROLL EFFECT
+       ========================================================= */
+
+    function updateNavbar() {
+
+        if (!navbar) return;
+
+        if (window.scrollY > 20) {
+
+            navbar.classList.add("scrolled");
+
         } else {
-            themeToggle.innerHTML =
-                '<i class="fas fa-moon"></i>';
 
-            localStorage.setItem(
-                "portfolio-theme",
-                "dark"
-            );
+            navbar.classList.remove("scrolled");
+
         }
-    });
-}
-
-
-/* =========================================================
-   SCROLL REVEAL
-========================================================= */
-
-/*
-   IMPORTANT:
-   Show all content immediately.
-   This prevents the portfolio from becoming blank
-   if the animation fails.
-*/
-
-const revealElements =
-    document.querySelectorAll(".reveal");
-
-revealElements.forEach((element) => {
-    element.classList.add("active");
-});
-
-
-/* =========================================================
-   NAVBAR SCROLL EFFECT
-========================================================= */
-
-const navbar =
-    document.querySelector(".navbar");
-
-function updateNavbar() {
-    if (!navbar) return;
-
-    if (window.scrollY > 30) {
-        navbar.style.boxShadow =
-            "0 8px 30px rgba(0, 0, 0, 0.18)";
-    } else {
-        navbar.style.boxShadow = "none";
     }
-}
-
-window.addEventListener(
-    "scroll",
-    updateNavbar
-);
-
-updateNavbar();
 
 
-/* =========================================================
-   ACTIVE NAVIGATION LINK
-========================================================= */
+    updateNavbar();
 
-const sections =
-    document.querySelectorAll("main section[id]");
 
-const navigationLinks =
-    document.querySelectorAll("nav a");
+    window.addEventListener(
+        "scroll",
+        updateNavbar,
+        { passive: true }
+    );
 
-function updateActiveLink() {
-    let currentSection = "";
 
-    sections.forEach((section) => {
-        const sectionTop =
-            section.offsetTop - 160;
+    /* =========================================================
+       PREMIUM SECTION REVEAL
+       ========================================================= */
 
-        const sectionHeight =
-            section.offsetHeight;
+    const sectionObserver =
+        new IntersectionObserver(
+            entries => {
 
-        if (
-            window.scrollY >= sectionTop &&
-            window.scrollY <
-                sectionTop + sectionHeight
-        ) {
-            currentSection =
-                section.getAttribute("id");
-        }
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add(
+                            "visible"
+                        );
+
+                    }
+
+                });
+
+            },
+            {
+                threshold: 0.12,
+
+                rootMargin:
+                    "-8% 0px -12% 0px"
+            }
+        );
+
+
+    sections.forEach(section => {
+
+        sectionObserver.observe(section);
+
     });
 
-    navigationLinks.forEach((link) => {
-        link.classList.remove("active");
 
-        if (
-            link.getAttribute("href") ===
-            "#" + currentSection
-        ) {
-            link.classList.add("active");
-        }
+    /* =========================================================
+       ELEMENT REVEAL
+       ========================================================= */
+
+    const revealObserver =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add(
+                            "active"
+                        );
+
+
+                        /*
+                         * Stop observing once the
+                         * animation has happened.
+                         */
+
+                        revealObserver.unobserve(
+                            entry.target
+                        );
+
+                    }
+
+                });
+
+            },
+            {
+                threshold: 0.10,
+
+                rootMargin:
+                    "0px 0px -60px 0px"
+            }
+        );
+
+
+    revealElements.forEach(element => {
+
+        revealObserver.observe(element);
+
     });
-}
-
-window.addEventListener(
-    "scroll",
-    updateActiveLink
-);
-
-updateActiveLink();
 
 
-/* =========================================================
-   PROFILE IMAGE CHECK
-========================================================= */
+    /* =========================================================
+       HERO ANIMATION
+       ========================================================= */
 
-const profileImage =
-    document.querySelector(".profile-image");
+    const heroReveal =
+        document.querySelector(
+            "#home .reveal"
+        );
 
-if (profileImage) {
-    profileImage.addEventListener(
-        "error",
+
+    if (heroReveal) {
+
+        setTimeout(() => {
+
+            heroReveal.classList.add("active");
+
+        }, 120);
+
+    }
+
+
+    /* =========================================================
+       ACTIVE NAVIGATION LINK
+       ========================================================= */
+
+    const activeSectionObserver =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(entry => {
+
+                    if (!entry.isIntersecting) {
+                        return;
+                    }
+
+
+                    const id =
+                        entry.target.getAttribute(
+                            "id"
+                        );
+
+
+                    navLinks.forEach(link => {
+
+                        link.classList.toggle(
+                            "active",
+
+                            link.getAttribute("href")
+                                === `#${id}`
+                        );
+
+                    });
+
+                });
+
+            },
+            {
+                threshold: 0.35,
+
+                rootMargin:
+                    "-20% 0px -45% 0px"
+            }
+        );
+
+
+    sections.forEach(section => {
+
+        activeSectionObserver.observe(
+            section
+        );
+
+    });
+
+
+    /* =========================================================
+       CLOSE MOBILE MENU AFTER RESIZE
+       ========================================================= */
+
+    window.addEventListener(
+        "resize",
         () => {
-            console.error(
-                "Profile image not found. Make sure profile.jpeg is in the same folder as index.html."
-            );
+
+            if (window.innerWidth > 760) {
+
+                closeMenu();
+
+            }
+
         }
     );
-}
+
+
+    /* =========================================================
+       ESCAPE KEY
+       ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Escape") {
+
+                closeMenu();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       INITIAL SECTION STATE
+       ---------------------------------------------------------
+       Makes sections that are already visible when the page
+       loads appear immediately instead of waiting for scrolling.
+       ========================================================= */
+
+    requestAnimationFrame(() => {
+
+        sections.forEach(section => {
+
+            const rect =
+                section.getBoundingClientRect();
+
+
+            const visible =
+                rect.top <
+                    window.innerHeight * 0.85 &&
+                rect.bottom > 0;
+
+
+            if (visible) {
+
+                section.classList.add(
+                    "visible"
+                );
+
+            }
+
+        });
+
+    });
+
+});
