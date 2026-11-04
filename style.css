@@ -800,3 +800,14 @@ body.dark-theme::-webkit-scrollbar-thumb { background: #555555; }
         padding: 16px;
     }
 }
+/* MOBILE PROJECTS VISIBILITY FIX */
+@media (max-width: 760px) {
+    #projects,
+    #projects .container,
+    #projects .reveal,
+    #projects .project-card {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+    }
+}

@@ -88,12 +88,16 @@ document.addEventListener("DOMContentLoaded", () => {
     updateNavbar();
     window.addEventListener("scroll", updateNavbar, { passive: true });
 
-    /* ---------- SECTION POP-IN (one after another) ---------- */
-    const sectionObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add("visible");
-        });
-    }, { threshold: 0.12, rootMargin: "-8% 0px -12% 0px" });
+/* ---------- SECTION POP-IN (one after another) ---------- */
+const sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            sectionObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0 });
+
 
     sections.forEach(section => sectionObserver.observe(section));
 
