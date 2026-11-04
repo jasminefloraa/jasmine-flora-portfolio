@@ -804,10 +804,17 @@ body.dark-theme::-webkit-scrollbar-thumb { background: #555555; }
 @media (max-width: 760px) {
     #projects,
     #projects .container,
-    #projects .reveal,
+    #projects .container *,
     #projects .project-card {
         opacity: 1 !important;
         visibility: visible !important;
         transform: none !important;
+        filter: none !important;
+        animation: none !important;
+    }
+
+    #projects {
+        display: block !important;
+        min-height: 100px;
     }
 }
