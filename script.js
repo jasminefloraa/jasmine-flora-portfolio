@@ -99,19 +99,23 @@ const sectionObserver = new IntersectionObserver(entries => {
 }, { threshold: 0 });
 
 
+
     sections.forEach(section => sectionObserver.observe(section));
 
-    /* ---------- ELEMENT REVEAL ---------- */
-    const revealObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("active");
-                revealObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.10, rootMargin: "0px 0px -60px 0px" });
+    /* ---------- ELEMENT REVEAL — MOBILE SAFE ---------- */
+const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+            revealObserver.unobserve(entry.target);
+        }
+    });
+}, {
+    threshold: 0,
+    rootMargin: "0px"
+});
 
-    revealElements.forEach(el => revealObserver.observe(el));
+revealElements.forEach(el => revealObserver.observe(el));
 
     /* ---------- HERO ENTRANCE ---------- */
     const heroReveal = document.querySelector("#home .reveal");
